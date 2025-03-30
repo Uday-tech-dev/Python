@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Daily Posts</title>
+</head>
+<body>
+    <h1>Daily Posts</h1>
+    <a href='/new'>Add New Post</a>
+    <ul>
+        {% for post in posts %}
+        <li>
+            <h2>{{ post.title }}</h2>
+            <p>{{ post.content }}</p>
+            {% if post.image %}
+                <img src='{{ url_for("static", filename=post.image) }}' alt='Post Image' style='max-width:300px;'>
+            {% endif %}
+            <small>Posted on {{ post.date_posted.strftime('%Y-%m-%d %H:%M') }}</small>
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
