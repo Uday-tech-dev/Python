@@ -1,61 +1,45 @@
+from flask import Flask, render_template, request, redirect
 import webbrowser
-import sys
+
+app = Flask(__name__)
 
 def redirect_to_upi():
-    url = "https://uday-tech-dev.github.io/Uday-upi/"
-    webbrowser.open(url)
+    return redirect("https://uday-tech-dev.github.io/Uday-upi/")
 
 def redirect_to_uday_bank():
-    url = "https://uday-tech-dev.github.io/Uday-Bank/"
-    try:
-        webbrowser.open(url, new=2)  # Opens in a new tab if possible
-        print("Redirecting to Uday Bank...")
-    except Exception as e:
-        print("Error opening the browser:", e)
+    return redirect("https://uday-tech-dev.github.io/Uday-Bank/")
 
-print("Welcome to Uday hospitals")
-Name = input("Name:")
-Age = int(input("Age:"))
-if Age < 18:
-    print("You must be 18+ to proceed")
-    sys.exit()
-if Age > 100:
-    print("Please enter a valid age")
-    sys.exit()
-Height = int(input("Height(in cm):"))
-if Height < 175:
-    print("Please enter a valid height")
-    sys.exit()
-Weight = int(input("Weight(in kg):"))
-if Weight < 65:
-    print("Please enter a valid Weight")
-    sys.exit()
+@app.route('/')
+def home():
+    return render_template("index.html")
 
-while True:
-    print("Please choose a package:")
-    print("1. Regular(200 rs)")
-    print("2. Premium(1000 rs)")
-    print("3. VIP(5000 rs)")
-    choice = input("Enter your choice (1/2/3): ")
-    if choice in ["1", "2", "3"]:
-        print(f"You selected {'Regular' if choice == '1' else 'Premium' if choice == '2' else 'VIP'} package.")
-        break
-    else:
-        print("Invalid choice, please enter 1, 2, or 3.\n")
+@app.route('/process', methods=['POST'])
+def process():
+    name = request.form.get("name")
+    age = int(request.form.get("age"))
+    height = int(request.form.get("height"))
+    weight = int(request.form.get("weight"))
 
-print("Please choose payment method")
-print("1. UPI (You will be redirected to Uday UPI)")
-print("2. Credit card (You will be redirected to Uday Bank)")
-print("3. Cash (You will provide the money to the doctor)")
-Choice = input("Enter your choice (1/2/3): ")
+    if age < 18:
+        return "You must be 18+ to proceed."
+    if age > 100:
+        return "Please enter a valid age."
+    if height < 175:
+        return "Please enter a valid height."
+    if weight < 65:
+        return "Please enter a valid weight."
 
-if Choice == "1":
-    redirect_to_upi()
-elif Choice == "2":
-    redirect_to_uday_bank()
-elif Choice == "3":
-    print("Doctor will be with you shortly. You can pay him directly.")
-else:
-    print("Invalid payment choice.")
+    package = request.form.get("package")
+    payment = request.form.get("payment")
 
-print("Thank you for booking an appointment!")
+    if payment == "1":
+        return redirect_to_upi()
+    elif payment == "2":
+        return redirect_to_uday_bank()
+    elif payment == "3":
+        return "Doctor will be with you shortly. You can pay him directly."
+
+    return "Thank you for booking an appointment!"
+
+if __name__ == '__main__':
+    app.run(debug=True)
