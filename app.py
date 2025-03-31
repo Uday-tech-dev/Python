@@ -1,7 +1,16 @@
-from flask import Flask, render_template, request, redirect
-import webbrowser
+from flask import Flask
 
 app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "Hello, Flask on Render!"
+
+if __name__ == '__main__':
+    app.run()
+
+import webbrowser
+
 
 def redirect_to_upi():
     return redirect("https://uday-tech-dev.github.io/Uday-upi/")
